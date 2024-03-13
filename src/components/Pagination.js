@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../css/Pagination.css';
 
-export default function Pagination({ limit, setLimit }) {
+export default function Pagination({ limit, setLimit,count,setCount }) {
+ 
+  
   const handleInputChange = (e) => {
     const newValue = parseInt(e.target.value);
     console.log(newValue)
@@ -16,8 +18,19 @@ export default function Pagination({ limit, setLimit }) {
   return (
     <div>
       <div className="pagination">
-        <a href="#">❮</a>
-        <a href="#">❯</a>
+        <a  onClick={()=>{
+
+           if(count>0){
+            setCount(count-1);
+           }
+        }}>❮</a>
+        <a onClick={()=>{
+                      console.log("increase")
+                      if(count<5){
+                        console.log("isucces")
+                        setCount(count+1);
+                       }
+        }}>❯</a>
       </div>
       <div className="items-per-page">
         <span>Show:</span>

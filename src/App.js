@@ -14,13 +14,19 @@ function App() {
   const [serachData,setSearchData]=useState([]);
   const [limit, setLimit] = useState(5)
   const [isFetching, setIsFetching] = useState(true)
-
+  const [countryId, setCountryId] = useState("IN")
+  const [count,setCount]=useState(0)
+  const [arr,setArr]=useState(["IN","AF","AL","DZ","AD","AO"])
+  useEffect(()=>{
+    console.log("chal gya",arr[count])
+    setCountryId(arr[count])
+  },[count])
   useEffect(() => {
     var options = {
       method: 'GET',
       url: `${host}/v1/geo/cities`,
 
-      params: { countryIds: 'IN', namePrefix: 'del', limit: limit },
+      params: { countryIds: countryId , namePrefix: 'del', limit: limit },
       headers: {
         'x-rapidapi-host': XRAPIDAPI_HOST,
         'x-rapidapi-key': XRAPIDAPI_KEY
@@ -38,7 +44,7 @@ function App() {
     //
 
     //
-  }, [limit])
+  }, [limit,countryId])
 
   return (
     <div className="App">
@@ -50,7 +56,7 @@ function App() {
           </> :
           <>
             <Table data={serachData} />
-            <Pagination limit={limit} setLimit={setLimit} />
+            <Pagination limit={limit} setLimit={setLimit} count={count} setCount={setCount} />
           </>
       }
 
