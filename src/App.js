@@ -1,23 +1,59 @@
-import logo from './logo.svg';
 import './App.css';
+import Navbar from "./components/Navbar"
+import Table from "./components/Table"
+import Pagination from "./components/Pagination"
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+
+const host = process.env.REACT_APP_HOST
+const XRAPIDAPI_HOST = process.env.REACT_APP_XRAPIDAPI_HOST
+const XRAPIDAPI_KEY = process.env.REACT_APP_XRAPIDAPI_KEY
 
 function App() {
+  const [data, setData] = useState([]);
+  const [serachData,setSearchData]=useState([]);
+  const [limit, setLimit] = useState(5)
+  const [isFetching, setIsFetching] = useState(true)
+
+  useEffect(() => {
+    var options = {
+      method: 'GET',
+      url: `${host}/v1/geo/cities`,
+
+      params: { countryIds: 'IN', namePrefix: 'del', limit: limit },
+      headers: {
+        'x-rapidapi-host': XRAPIDAPI_HOST,
+        'x-rapidapi-key': XRAPIDAPI_KEY
+      }
+    };
+
+    axios.request(options).then(function (response) {
+      console.log(response.data);
+      setData(response.data.data)
+      setSearchData(response.data.data)
+      setIsFetching(false)
+    }).catch(function (error) {
+      console.error(error);
+    });
+    //
+
+    //
+  }, [limit])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar data={data} setSearchData={setSearchData} />
+      {
+        isFetching ?
+          <>
+            <h1>fetching</h1>
+          </> :
+          <>
+            <Table data={serachData} />
+            <Pagination limit={limit} setLimit={setLimit} />
+          </>
+      }
+
     </div>
   );
 }
